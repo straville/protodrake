@@ -1,2 +1,0 @@
-# protodrake
-Miscellaneous protoing
