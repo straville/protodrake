@@ -35,6 +35,7 @@ Configure in `.claude/settings.json`:
 OS-level isolation for bash commands:
 - **macOS**: Uses Seatbelt sandbox profiles
 - **Linux**: Uses bubblewrap (bwrap)
+- **Windows**: No native sandbox — use WSL2 or Docker-based isolation
 
 Enable with `/sandbox` command. Restricts filesystem access and network connections.
 
@@ -50,6 +51,8 @@ Enable with `/sandbox` command. Restricts filesystem access and network connecti
 
 ### Setup
 
+**macOS / Linux:**
+
 ```bash
 mkdir -p /tmp/kata-02/src && cd /tmp/kata-02
 git init
@@ -58,20 +61,39 @@ echo "console.log('app');" > src/app.js
 echo '{ "name": "kata-02" }' > package.json
 ```
 
+**Windows (PowerShell):**
+
+```powershell
+New-Item -ItemType Directory -Force -Path $env:TEMP\kata-02\src | Set-Location
+Set-Location $env:TEMP\kata-02
+git init
+"DB_PASSWORD=supersecret123" | Out-File -Encoding utf8 .env
+"console.log('app');" | Out-File -Encoding utf8 src\app.js
+'{ "name": "kata-02" }' | Out-File -Encoding utf8 package.json
+```
+
 ### Tasks
 
 #### 1. Create Permission Rules
 
 Create a `.claude/settings.json` that:
 - Allows `git status` and `git diff` without prompting
-- Denies any `rm -rf` commands
+- Denies any `rm -rf` commands (or `Remove-Item -Recurse -Force` on Windows)
 - Denies reading `.env` files
+
+**macOS / Linux:**
 
 ```bash
 mkdir -p /tmp/kata-02/.claude
 ```
 
-Create `/tmp/kata-02/.claude/settings.json`:
+**Windows (PowerShell):**
+
+```powershell
+New-Item -ItemType Directory -Force -Path $env:TEMP\kata-02\.claude
+```
+
+Create `.claude/settings.json`:
 
 ```json
 {
