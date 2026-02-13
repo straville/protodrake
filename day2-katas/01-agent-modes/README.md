@@ -29,11 +29,22 @@ Plan mode is special — Claude can read files, search code, and analyze archite
 
 ### Setup
 
+**macOS / Linux:**
+
 ```bash
 mkdir -p /tmp/kata-01 && cd /tmp/kata-01
 git init
 echo "console.log('hello');" > app.js
 echo '{ "name": "kata-01", "scripts": { "start": "node app.js" } }' > package.json
+```
+
+**Windows (PowerShell):**
+
+```powershell
+New-Item -ItemType Directory -Force -Path $env:TEMP\kata-01 | Set-Location
+git init
+"console.log('hello');" | Out-File -Encoding utf8 app.js
+'{ "name": "kata-01", "scripts": { "start": "node app.js" } }' | Out-File -Encoding utf8 package.json
 ```
 
 ### Tasks

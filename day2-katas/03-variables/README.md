@@ -17,7 +17,7 @@ CLAUDE.md files provide persistent context that loads automatically every sessio
 
 | File | Scope | Shared? |
 |------|-------|---------|
-| `~/.claude/CLAUDE.md` | All your projects | No |
+| `~/.claude/CLAUDE.md` (macOS/Linux) or `%USERPROFILE%\.claude\CLAUDE.md` (Windows) | All your projects | No |
 | `CLAUDE.md` (project root) | This project | Yes (git) |
 | `.claude/CLAUDE.md` | This project | Yes (git) |
 | `CLAUDE.local.md` | This project | No (gitignored) |
@@ -48,11 +48,23 @@ Key Claude Code env vars:
 
 ### Setup
 
+**macOS / Linux:**
+
 ```bash
 mkdir -p /tmp/kata-03/.claude && cd /tmp/kata-03
 git init
 echo '{ "name": "kata-03" }' > package.json
 echo "console.log('hello');" > index.js
+```
+
+**Windows (PowerShell):**
+
+```powershell
+New-Item -ItemType Directory -Force -Path $env:TEMP\kata-03\.claude | Out-Null
+Set-Location $env:TEMP\kata-03
+git init
+'{ "name": "kata-03" }' | Out-File -Encoding utf8 package.json
+"console.log('hello');" | Out-File -Encoding utf8 index.js
 ```
 
 ### Tasks
@@ -125,8 +137,18 @@ Start Claude and test:
 
 #### 4. Use /init to Bootstrap
 
+**macOS / Linux:**
+
 ```bash
-cd /tmp/kata-03-init && mkdir -p /tmp/kata-03-init && cd /tmp/kata-03-init
+mkdir -p /tmp/kata-03-init && cd /tmp/kata-03-init
+git init
+claude
+```
+
+**Windows (PowerShell):**
+
+```powershell
+New-Item -ItemType Directory -Force -Path $env:TEMP\kata-03-init | Set-Location
 git init
 claude
 ```
