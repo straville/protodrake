@@ -24,6 +24,8 @@ Claude Code has built-in keyboard shortcuts and supports full customization via 
 | Any | `\` then `Enter` |
 | macOS Terminal | `Option+Enter` |
 | iTerm2, WezTerm, Ghostty, Kitty | `Shift+Enter` |
+| Windows Terminal | `Shift+Enter` |
+| PowerShell (legacy) | `Shift+Enter` |
 
 ### Vim Mode
 
@@ -36,7 +38,7 @@ Enable with `/vim`. Provides vi-style editing with normal/insert modes:
 
 ### Custom Keybindings
 
-File: `~/.claude/keybindings.json`
+File: `~/.claude/keybindings.json` (macOS/Linux) or `%USERPROFILE%\.claude\keybindings.json` (Windows)
 
 ```json
 {

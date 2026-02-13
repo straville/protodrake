@@ -58,11 +58,23 @@ In `.claude/settings.json`:
 
 ### Setup
 
+**macOS / Linux:**
+
 ```bash
 mkdir -p /tmp/kata-06/.claude/hooks && cd /tmp/kata-06
 git init
 echo "console.log('hello');" > app.js
 echo '{ "name": "kata-06" }' > package.json
+```
+
+**Windows (PowerShell):**
+
+```powershell
+New-Item -ItemType Directory -Force -Path $env:TEMP\kata-06\.claude\hooks | Out-Null
+Set-Location $env:TEMP\kata-06
+git init
+"console.log('hello');" | Out-File -Encoding utf8 app.js
+'{ "name": "kata-06" }' | Out-File -Encoding utf8 package.json
 ```
 
 ### Tasks
@@ -71,7 +83,7 @@ echo '{ "name": "kata-06" }' > package.json
 
 Create a hook that logs every tool Claude uses.
 
-`.claude/hooks/log-tools.sh`:
+**macOS / Linux** — `.claude/hooks/log-tools.sh`:
 
 ```bash
 #!/bin/bash
@@ -84,13 +96,26 @@ echo "[$TIMESTAMP] Tool used: $TOOL" >> /tmp/kata-06/claude-tool-log.txt
 exit 0
 ```
 
-Make it executable:
-
 ```bash
 chmod +x /tmp/kata-06/.claude/hooks/log-tools.sh
 ```
 
-Add to `/tmp/kata-06/.claude/settings.json`:
+**Windows** — `.claude/hooks/log-tools.ps1`:
+
+```powershell
+$Input = $input | Out-String
+$parsed = $Input | ConvertFrom-Json
+$tool = if ($parsed.tool_name) { $parsed.tool_name } else { "unknown" }
+$timestamp = Get-Date -Format "HH:mm:ss"
+
+Add-Content -Path "$env:TEMP\kata-06\claude-tool-log.txt" -Value "[$timestamp] Tool used: $tool"
+
+exit 0
+```
+
+Add to `.claude/settings.json` (adjust the `command` value for your OS):
+
+**macOS / Linux:**
 
 ```json
 {
@@ -102,6 +127,26 @@ Add to `/tmp/kata-06/.claude/settings.json`:
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/log-tools.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Windows:**
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -ExecutionPolicy Bypass -File \"%CLAUDE_PROJECT_DIR%\\.claude\\hooks\\log-tools.ps1\""
           }
         ]
       }
@@ -122,7 +167,7 @@ cat /tmp/kata-06/claude-tool-log.txt
 
 Create a hook that prevents deletion commands.
 
-`.claude/hooks/block-delete.sh`:
+**macOS / Linux** — `.claude/hooks/block-delete.sh`:
 
 ```bash
 #!/bin/bash
@@ -141,7 +186,24 @@ exit 0
 chmod +x /tmp/kata-06/.claude/hooks/block-delete.sh
 ```
 
-Update settings to add a PreToolUse hook:
+**Windows** — `.claude/hooks/block-delete.ps1`:
+
+```powershell
+$Input = $input | Out-String
+$parsed = $Input | ConvertFrom-Json
+$command = if ($parsed.tool_input.command) { $parsed.tool_input.command } else { "" }
+
+if ($command -match '(rm -rf|rm -r|rmdir|Remove-Item.*-Recurse.*-Force)') {
+    [Console]::Error.WriteLine("BLOCKED: Destructive delete commands are not allowed.")
+    exit 2
+}
+
+exit 0
+```
+
+Update settings to add a PreToolUse hook (adjust paths for your OS):
+
+**macOS / Linux:**
 
 ```json
 {
@@ -164,6 +226,37 @@ Update settings to add a PreToolUse hook:
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/log-tools.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Windows:**
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -ExecutionPolicy Bypass -File \"%CLAUDE_PROJECT_DIR%\\.claude\\hooks\\block-delete.ps1\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -ExecutionPolicy Bypass -File \"%CLAUDE_PROJECT_DIR%\\.claude\\hooks\\log-tools.ps1\""
           }
         ]
       }
@@ -197,7 +290,9 @@ Browse the available events and see how hooks are configured interactively.
 
 #### 4. Desktop Notification Hook (Bonus)
 
-If on macOS, add a notification when Claude needs attention:
+Add a notification when Claude needs attention:
+
+**macOS:**
 
 ```json
 {
@@ -209,6 +304,46 @@ If on macOS, add a notification when Claude needs attention:
           {
             "type": "command",
             "command": "osascript -e 'display notification \"Claude needs attention\" with title \"Claude Code\"'"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Linux (notify-send):**
+
+```json
+{
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "notify-send 'Claude Code' 'Claude needs attention'"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Windows (PowerShell toast):**
+
+```json
+{
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -Command \"[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); [System.Windows.Forms.MessageBox]::Show('Claude needs attention','Claude Code')\""
           }
         ]
       }

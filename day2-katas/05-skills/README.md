@@ -8,7 +8,7 @@ Skills are reusable prompt templates that extend Claude Code with custom slash c
 
 | Location | Scope | Shared with team? |
 |----------|-------|-------------------|
-| `~/.claude/skills/<name>/SKILL.md` | All your projects | No |
+| `~/.claude/skills/<name>/SKILL.md` (macOS/Linux) or `%USERPROFILE%\.claude\skills\<name>\SKILL.md` (Windows) | All your projects | No |
 | `.claude/skills/<name>/SKILL.md` | This project only | Yes (via git) |
 
 ### SKILL.md Structure
@@ -53,6 +53,8 @@ Recent changes: !`git log --oneline -5`
 
 ### Setup
 
+**macOS / Linux:**
+
 ```bash
 mkdir -p /tmp/kata-05/src/.claude/skills && cd /tmp/kata-05
 git init
@@ -71,6 +73,29 @@ function formatCurrency(amount) {
 
 module.exports = { calculateTotal, formatCurrency };
 EOF
+```
+
+**Windows (PowerShell):**
+
+```powershell
+New-Item -ItemType Directory -Force -Path $env:TEMP\kata-05\src\.claude\skills | Out-Null
+Set-Location $env:TEMP\kata-05
+git init
+@"
+function calculateTotal(items) {
+  let total = 0;
+  for (let i = 0; i < items.length; i++) {
+    total = total + items[i].price * items[i].quantity;
+  }
+  return total;
+}
+
+function formatCurrency(amount) {
+  return "`$" + amount.toFixed(2);
+}
+
+module.exports = { calculateTotal, formatCurrency };
+"@ | Out-File -Encoding utf8 src\app.js
 ```
 
 ### Tasks
@@ -138,7 +163,7 @@ Type: `/status`
 
 #### 3. Create a Personal Global Skill
 
-Create `~/.claude/skills/explain/SKILL.md`:
+Create `~/.claude/skills/explain/SKILL.md` (on Windows: `%USERPROFILE%\.claude\skills\explain\SKILL.md`):
 
 ```yaml
 ---
