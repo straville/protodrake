@@ -34,6 +34,7 @@ Developers who have used Claude Code at least once and want to go deeper. You sh
 | # | Kata | Time | Description |
 |---|------|------|-------------|
 | 0 | [Directory & Config Files Example](day2-katas/0-directory-and-config-files-example/) | Reference | Full project structure blueprint with all Claude Code config features |
+| 00 | [CLAUDE.md Files & Sub-Agents](day2-katas/00-CLAUDE.mds-subagents-example/) | Reference | Layered CLAUDE.md hierarchy with reusable sub-agent architecture |
 | 01 | [Agent Modes](day2-katas/01-agent-modes/) | ~15 min | Permission modes, Plan mode, Shift+Tab cycling |
 | 02 | [Security & Containment](day2-katas/02-security-containment/) | ~15 min | Permission rules, sandboxing, file boundaries |
 | 03 | [Variables & Configuration](day2-katas/03-variables/) | ~15 min | Settings layers, CLAUDE.md, environment variables |
