@@ -1,4 +1,6 @@
 # Kata 00: CLAUDE.md Files & Sub-Agent Architecture (Reference)
+Prompt: whip me up an example of claude.md in root folder of a generic team-sized software project with integrations to caches, UI assests, edge providers, drivers, own code, unit tests, integration tests DB usage, CI/CD and worflow
+  section to split this into convenient sub agents. If you decide to split the work into reusable sub agents, include that architecture according to best practices. specialized claude.md in subfolders. agents.md needed?
 
 ## Overview
 
