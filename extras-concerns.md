@@ -1,4 +1,4 @@
-Juuri kokeilin omaa Bedrock konffia ja on itsellä todella ripeä joten todennäköinen culprit on Vaisalan AWS Accounttiin ja sitä kautta tiettyyn modeliin liittyvä throttle koska kyseessä on kuitenkin defauttina on-demand palvelu. 
+Juuri kokeilin omaa Bedrock konffia ja on itsellä todella ripeä joten todennäköinen culprit on ACME corp. AWS Accounttiin ja sitä kautta tiettyyn modeliin liittyvä throttle koska kyseessä on kuitenkin defauttina on-demand palvelu. 
 
 Yksi mitä voitte kokeilla on tuunata nykykonffia (todnäk .claude/settings.json file) ja muuttaa jonkun toisen modelin käyttöön ja katsoa nopeutuuko. 
 
