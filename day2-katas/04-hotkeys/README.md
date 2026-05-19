@@ -29,12 +29,24 @@ Claude Code has built-in keyboard shortcuts and supports full customization via 
 
 ### Vim Mode
 
-Enable with `/vim`. Provides vi-style editing with normal/insert modes:
+Enable via the `editorMode` setting (no longer a slash command). Either:
+
+- Run `/config` and set **Editor mode** to `vim`, or
+- Add to `~/.claude/settings.json` (or project/local settings):
+
+  ```json
+  { "editorMode": "vim" }
+  ```
+
+  Set back to `"normal"` to disable.
+
+Provides vi-style editing with NORMAL and VISUAL modes:
 - `Esc` — Normal mode
-- `i`, `a`, `o` — Insert mode
+- `i`, `a`, `o` / `O` — Insert mode (use `o`/`O` or `Ctrl+J` for a newline; `Enter` still submits)
 - `h/j/k/l` — Navigation
 - `w`, `b`, `e` — Word movement
-- `dd`, `yy`, `p` — Delete/yank/paste lines
+- `v` / `V` — Visual / visual-line selection
+- `d`, `c`, `y`, `p` — Delete / change / yank / paste
 
 ### Custom Keybindings
 
@@ -89,17 +101,15 @@ In the same Claude session:
 
 #### 3. Try Vim Mode
 
-```bash
-/vim
-```
+Enable it via `/config` → **Editor mode** → `vim` (or add `"editorMode": "vim"` to `~/.claude/settings.json`).
 
 1. Type something in insert mode
 2. Press `Esc` to go to normal mode
 3. Navigate with `h/j/k/l`
 4. Press `i` to go back to insert mode
-5. Type your prompt and submit
+5. Type your prompt and submit (use `o` or `Ctrl+J` for newlines — `Enter` submits)
 
-Toggle vim off when done: `/vim`
+Toggle vim off when done: set **Editor mode** back to `normal` in `/config` (or `"editorMode": "normal"`).
 
 #### 4. Create Custom Keybindings
 
