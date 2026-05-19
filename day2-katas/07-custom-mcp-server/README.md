@@ -20,15 +20,30 @@ An MCP server exposes three primitives:
 
 ### Configuring MCP Servers in Claude Code
 
-In `.claude/settings.json` or `~/.claude/settings.json`:
+MCP servers are **not** configured in `.claude/settings.json` (that file is for general settings like permissions, hooks, and model). They live in their own config or are added via the CLI.
+
+Configuration locations by scope:
+
+| Scope     | File                  | Shared via git? |
+|-----------|-----------------------|-----------------|
+| Project   | `.mcp.json` (project root) | Yes            |
+| User/Local| `~/.claude.json`      | No              |
+
+The recommended way to add a server is the CLI:
+
+```bash
+claude mcp add --transport stdio --scope project my-server -- node ./mcp-server/index.js
+```
+
+Or write `.mcp.json` directly at the project root:
 
 ```json
 {
   "mcpServers": {
     "my-server": {
+      "type": "stdio",
       "command": "node",
-      "args": ["./mcp-server/index.js"],
-      "cwd": "/path/to/project"
+      "args": ["./mcp-server/index.js"]
     }
   }
 }
@@ -40,11 +55,14 @@ For remote SSE servers:
 {
   "mcpServers": {
     "remote-api": {
+      "type": "sse",
       "url": "https://my-mcp-server.example.com/sse"
     }
   }
 }
 ```
+
+See the [Claude Code MCP docs](https://code.claude.com/docs/en/mcp.md) for full details on scopes and installation.
 
 ### Transport Options
 
@@ -165,18 +183,27 @@ Add `"type": "module"` to your `package.json`.
 
 #### 2. Register with Claude Code
 
-Create `.claude/settings.json`:
+Register the server at project scope so it's picked up when you run `claude` in this directory. Either run:
+
+```bash
+claude mcp add --transport stdio --scope project workshop-tools -- node mcp-server/index.js
+```
+
+Or create `.mcp.json` at the project root:
 
 ```json
 {
   "mcpServers": {
     "workshop-tools": {
+      "type": "stdio",
       "command": "node",
       "args": ["mcp-server/index.js"]
     }
   }
 }
 ```
+
+> Note: Do **not** put `mcpServers` in `.claude/settings.json` — that file is for permissions, hooks, and other general settings, and MCP entries there will be ignored.
 
 #### 3. Test Your MCP Server
 
